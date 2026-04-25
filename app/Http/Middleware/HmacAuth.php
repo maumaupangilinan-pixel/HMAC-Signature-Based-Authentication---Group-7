@@ -8,20 +8,21 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HmacAuth
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  Closure(Request): (Response)  $next
-     */
     public function handle(Request $request, Closure $next): Response
     {
-        $apiKey = $request->header('X-API-KEY');
+        $apiKey    = $request->header('X-API-KEY');
         $signature = $request->header('X-SIGNATURE');
         $timestamp = $request->header('X-TIMESTAMP');
 
-        $secret = env('HMAC_SECRET', 'my_secret_key');
+        // Check if headers are missing
+        if (!$apiKey || !$signature || !$timestamp) {
+            return response()->json([
+                'message' => 'Unauthorized (Missing Headers)'
+            ], 401);
+        }
 
-        $payload = json_encode($request->all());
+        $secret  = env('HMAC_SECRET', '852963');
+        $payload = $request->getContent() ?: '';
 
         $generatedSignature = hash_hmac(
             'sha256',
