@@ -77,9 +77,9 @@ DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_DATABASE=online_store_finals
 DB_USERNAME=postgres
-DB_PASSWORD=your_password
+DB_PASSWORD=852963
 
-HMAC_SECRET=your_secret_key
+HMAC_SECRET=852963
 ```
 
 ### Step 4 — Generate App Key
@@ -156,7 +156,7 @@ In Postman, click the **Pre-request Script** tab and paste:
 ```javascript
 const apiKey    = 'group7';
 const timestamp = '1714000000';
-const secret    = 'your_secret_key'; // must match HMAC_SECRET in .env
+const secret    = '852963';
 const payload   = pm.request.body.raw || '';
 
 const message   = apiKey + timestamp + payload;
@@ -223,18 +223,3 @@ const signature = CryptoJS.HmacSHA256(message, secret).toString();
 
 
 ---
-
-##  Authentication Passkey
-
-const apiKey    = 'group7';
-const timestamp = '1714000000';
-const secret    = '852963';
-const payload   = pm.request.body.raw || '';  // use actual body!
-
-const message   = apiKey + timestamp + payload;
-const signature = CryptoJS.HmacSHA256(message, secret).toString();
-
-pm.request.headers.add({ key: 'X-API-KEY',   value: apiKey });
-pm.request.headers.add({ key: 'X-TIMESTAMP', value: timestamp });
-pm.request.headers.add({ key: 'X-SIGNATURE', value: signature });
-
